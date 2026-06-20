@@ -146,24 +146,20 @@ function transform(raw: any[]): Submission[] {
 
 export const getDashboardData = createServerFn({ method: "GET" }).handler(
   async (): Promise<DashboardData> => {
-    // Rectified: Check process scope, Vite client targets, and platform contextual blocks
-    const token = 
-      process.env.KOBO_TOKEN || 
-      process.env.VITE_KOBO_TOKEN || 
-      (globalThis as any)?.process?.env?.KOBO_TOKEN ||
-      import.meta.env.VITE_KOBO_TOKEN;
-
-    const assetUid = 
-      process.env.KOBO_ASSET_UID || 
-      process.env.VITE_KOBO_ASSET_UID || 
-      (globalThis as any)?.process?.env?.KOBO_ASSET_UID ||
-      import.meta.env.VITE_KOBO_ASSET_UID;
+    // Server-only secrets. Never read VITE_* here — those would be inlined
+    // into the client bundle and exposed to anyone visiting the site.
+    const token = process.env.KOBO_TOKEN;
+    const assetUid = process.env.KOBO_ASSET_UID;
 
     if (!token || !assetUid) {
+      console.error("[kobo] Missing server config", {
+        hasToken: Boolean(token),
+        hasAssetUid: Boolean(assetUid),
+      });
       return {
         submissions: [],
         fetchedAt: new Date().toISOString(),
-        error: `Missing configuration credentials. Token: ${token ? "Present" : "Missing"}, UID: ${assetUid ? "Present" : "Missing"}`
+        error: "Dashboard data is currently unavailable. Please contact your administrator.",
       };
     }
 
@@ -188,7 +184,8 @@ export const getDashboardData = createServerFn({ method: "GET" }).handler(
           });
           
           if (!res.ok) {
-            lastErr = `${res.status} ${res.statusText} at ${base}`;
+            console.error(`[kobo] Upstream error ${res.status} ${res.statusText} at ${base}`);
+            lastErr = "upstream_error";
             url = null;
             break;
           }
@@ -207,14 +204,15 @@ export const getDashboardData = createServerFn({ method: "GET" }).handler(
           pages,
         };
       } catch (e) {
-        lastErr = e instanceof Error ? e.message : String(e);
+        console.error("[kobo] Fetch failed", e);
+        lastErr = "fetch_failed";
       }
     }
 
     return {
       submissions: [],
       fetchedAt: new Date().toISOString(),
-      error: `Could not reach KoboToolbox: ${lastErr}`,
+      error: "Dashboard data is currently unavailable. Please try again later.",
     };
   },
 );

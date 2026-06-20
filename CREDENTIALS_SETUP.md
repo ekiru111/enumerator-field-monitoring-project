@@ -43,9 +43,10 @@ Reads from:
 - `DB_NAME` - Database name (default: "me_monitoring_db")
 
 #### **Frontend** (Vite/React)
-Reads from:
-- `VITE_KOBO_TOKEN` - Exposed to frontend (used for client-side API calls)
-- `VITE_KOBO_ASSET_UID` - Exposed to frontend
+The frontend does NOT read KoboToolbox credentials directly. All Kobo API calls
+happen in a server function (`src/lib/kobo.functions.ts`) using the server-only
+`KOBO_TOKEN` / `KOBO_ASSET_UID` env vars. Never add `VITE_KOBO_TOKEN` — Vite
+inlines `VITE_*` vars into the browser bundle, which would leak the token.
 
 ### 3. Git & GitHub Deployment
 
