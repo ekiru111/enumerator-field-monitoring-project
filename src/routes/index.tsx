@@ -39,11 +39,13 @@ const dashQuery = queryOptions<DashboardData>({
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Enumerator Field Monitoring" },
+      { title: "Dashboard — Enumerator Field Monitoring" },
       { name: "description", content: "Real-time M&E dashboard linking KoboToolbox field submissions to an automated quality scoring engine." },
-      { property: "og:title", content: "Enumerator Field Monitoring" },
+      { property: "og:title", content: "Dashboard — Enumerator Field Monitoring" },
       { property: "og:description", content: "Live KoboToolbox quality monitoring with duplicate, GPS and duration audits." },
+      { property: "og:url", content: "https://enumerator-monitoring-dashboard.lovable.app/" },
     ],
+    links: [{ rel: "canonical", href: "https://enumerator-monitoring-dashboard.lovable.app/" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(dashQuery),
   component: DashboardPage,
