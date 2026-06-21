@@ -380,7 +380,15 @@ function Dashboard() {
         {/* Footer actions */}
         <section className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-card border border-border p-4 shadow-sm">
           <div className="text-xs text-muted-foreground font-medium">
-            Live KoboToolbox feed • last refreshed {new Date(data.fetchedAt).toLocaleTimeString()}
+            Live KoboToolbox feed • last refreshed{" "}
+            {new Date(data.fetchedAt).toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: false,
+              timeZone: "UTC",
+            })}{" "}
+            UTC
           </div>
           <div className="flex gap-2">
             <button
