@@ -10,33 +10,44 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GuidesAutomatedKobotoolboxMonitoringRouteImport } from './routes/guides.automated-kobotoolbox-monitoring'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuidesAutomatedKobotoolboxMonitoringRoute =
+  GuidesAutomatedKobotoolboxMonitoringRouteImport.update({
+    id: '/guides/automated-kobotoolbox-monitoring',
+    path: '/guides/automated-kobotoolbox-monitoring',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/guides/automated-kobotoolbox-monitoring': typeof GuidesAutomatedKobotoolboxMonitoringRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/guides/automated-kobotoolbox-monitoring': typeof GuidesAutomatedKobotoolboxMonitoringRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/guides/automated-kobotoolbox-monitoring': typeof GuidesAutomatedKobotoolboxMonitoringRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/guides/automated-kobotoolbox-monitoring'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/guides/automated-kobotoolbox-monitoring'
+  id: '__root__' | '/' | '/guides/automated-kobotoolbox-monitoring'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GuidesAutomatedKobotoolboxMonitoringRoute: typeof GuidesAutomatedKobotoolboxMonitoringRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +59,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guides/automated-kobotoolbox-monitoring': {
+      id: '/guides/automated-kobotoolbox-monitoring'
+      path: '/guides/automated-kobotoolbox-monitoring'
+      fullPath: '/guides/automated-kobotoolbox-monitoring'
+      preLoaderRoute: typeof GuidesAutomatedKobotoolboxMonitoringRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GuidesAutomatedKobotoolboxMonitoringRoute:
+    GuidesAutomatedKobotoolboxMonitoringRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
